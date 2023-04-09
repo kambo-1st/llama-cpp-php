@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Kambo\LLama\Tests;
 
 use PHPUnit\Framework\TestCase;
 
