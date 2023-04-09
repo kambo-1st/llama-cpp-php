@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "symfony/event-dispatcher": "^6.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.13",
@@ -24,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Kambo\\LLama\\": "src"
+            "Kambo\\LLamaCPP\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Kambo\\LLama\\Tests\\": "tests"
+            "Kambo\\LLamaCPP\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -41,8 +42,8 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "minimum-stability": "dev",
