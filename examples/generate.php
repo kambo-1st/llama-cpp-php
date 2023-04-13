@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Kambo\LLamaCPP\LLamaCPP;
 use Kambo\LLamaCPP\Context;
@@ -8,7 +8,7 @@ use Kambo\LLamaCPP\Parameters\ModelParameters;
 use Kambo\LLamaCPP\Parameters\GenerationParameters;
 
 $template = "You are a programmer, write PHP class that will add two numbers and print the result. Stop at class end.";
-$context = Context::createWithParameter(new ModelParameters('./models/gpt4all-7B/gpt4all-lora-quantized-new.bin'));
+$context = Context::createWithParameter(new ModelParameters(__DIR__ .'/models/ggjt-model.bin'));
 $llama = new LLamaCPP($context);
 echo "Prompt: \033[0;32m".$template."\033[0m".PHP_EOL;
 

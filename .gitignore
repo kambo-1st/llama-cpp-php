@@ -11,4 +11,4 @@ psalm.xml
 vendor
 .php-cs-fixer.cache
 models
-
+examples/models
