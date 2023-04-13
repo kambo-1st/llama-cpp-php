@@ -5,16 +5,25 @@ namespace Kambo\LLamaCPP;
 use Kambo\LLamaCPP\Parameters\ModelParameters;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
 
-class Context
+final class Context
 {
     private \FFI\CData $ctx;
 
     public function __construct(
         private LLamaCPPFFI $ffi,
-        private ModelParameters $modelParameters,
+        private readonly ModelParameters $modelParameters,
     )
     {
         $lparams = $ffi->llama_context_default_params();
+
+        $lparams->n_ctx = $modelParameters->getNCtx();
+        $lparams->n_parts = $modelParameters->getNParts();
+        $lparams->seed = $modelParameters->getSeed();
+        $lparams->f16_kv = $modelParameters->isF16KV();
+        $lparams->logits_all = $modelParameters->isLogitsAll();
+        $lparams->vocab_only = $modelParameters->isVocabOnly();
+        $lparams->use_mlock = $modelParameters->isUseMlock();
+        $lparams->embedding = $modelParameters->isEmbedding();
 
         $this->ctx = $ffi->llama_init_from_file($modelParameters->getModelPath(), $lparams);
     }

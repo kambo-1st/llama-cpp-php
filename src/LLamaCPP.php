@@ -2,12 +2,11 @@
 
 namespace Kambo\LLamaCPP;
 
-use Kambo\LLamaCPP\Parameters\ModelParameters;
 use Kambo\LLamaCPP\Parameters\GenerationParameters;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
 
-class LLamaCPP
+final class LLamaCPP
 {
     public function __construct(
         private Context $context,
@@ -20,14 +19,13 @@ class LLamaCPP
         }
     }
 
-    public function generate(string $prompt, GenerationParameters $generation)
+    public function generate(string $prompt, ?GenerationParameters $generation=null): \Generator
     {
+        if ($generation === null) {
+            $generation = new GenerationParameters();
+        }
 
-    }
-
-    public function generateAll(string $prompt, ?GenerationParameters $generation=null) : string
-    {
-        $input = $this->ffi->new("llama_token[".strlen($prompt)."]");
+        $input = $this->ffi->newArray("llama_token", strlen($prompt));
 
         $nOfTok = $this->ffi->llama_tokenize($this->context->getCtx(), $prompt, $input, strlen($prompt), true);
 
@@ -35,27 +33,42 @@ class LLamaCPP
             $this->ffi->llama_eval($this->context->getCtx(), $input + $i, 1, $i, 10);
         }
 
-        //echo "Prompt: " . $prompt.PHP_EOL;
-        $tokenCount = $nOfTok;
-        $result = '';
-        for ($i = 0; $i < 300; $i++) {
+        $eosToken = $this->ffi->llama_token_eos();
+        $desiredNumberOfTokens = $generation->getPredictLength();
+        for ($i = 0; $i < $desiredNumberOfTokens; $i++) {
 
-            $id = $this->ffi->llama_sample_top_p_top_k($this->context->getCtx(), null, 0, 40, 0.8, 0.2, 1/0.85);
+            $id = $this->ffi->llama_sample_top_p_top_k(
+                $this->context->getCtx(),
+                null,
+                0,
+                $generation->getTopP(),
+                $generation->getTopK(),
+                $generation->getTemperature(),
+                $generation->getRepeatPenalty(),
+            );
 
-            // TODO: break here if EOS
+            if ($id == $eosToken) {
+                break;
+            }
 
             $token = $this->ffi->new("llama_token");
             $token->cdata = $id;
 
-            $tokenCount++;
+            $nOfTok++;
 
             $prediction = $this->ffi->llama_token_to_str($this->context->getCtx(), $id);
-            $result .= $prediction;
 
-            // eval next token
-            $this->ffi->llama_eval($this->context->getCtx(), $this->ffi->addr($token), 1, $tokenCount, 10);
+            yield $prediction;
+            $this->ffi->llama_eval($this->context->getCtx(), $this->ffi->addr($token), 1, $nOfTok, 10);
         }
+    }
 
-        return $result;
+    public function generateAll(string $prompt, ?GenerationParameters $generation=null) : string
+    {
+        $tokens = iterator_to_array(
+            $this->generate($prompt, $generation)
+        );
+
+        return implode('', $tokens);
     }
 }

@@ -4,6 +4,7 @@ namespace Kambo\LLamaCPP\Native;
 
 use FFI;
 use FFI\CData;
+use FFI\CType;
 
 /**
  * Wrapper for llama-ffi.h
@@ -71,6 +72,18 @@ class LLamaCPPFFI
     }
 
     /**
+     * Method that creates a C array of specific type.
+     *
+     * @param string $type
+     *
+     * @return CData|null
+     */
+    public function newArray(string $type, int $size): ?CData
+    {
+        return $this->fii->new($type."[".$size."]");
+    }
+
+    /**
      * Returns C pointer to the given C data structure. The pointer is
      * not "owned" and won't be free. Anyway, this is a potentially
      * unsafe operation, because the life-time of the returned pointer
@@ -110,9 +123,25 @@ class LLamaCPPFFI
         $this->fii->llama_eval($ctx, $tokens, $nOfTokens, $position, $nOfSamples);
     }
 
-    public function llama_sample_top_p_top_k(CData $ctx, ?CData $tokens, int $nOfTokens, int $position, float $topP, float $topK, float $temperature): int
+    public function llama_sample_top_p_top_k(
+        CData $ctx,
+        ?CData $lastNTokens,
+        int $lastNTokensSize,
+        float $topP,
+        float $topK,
+        float $temperature,
+        float $repeatPenalty
+    ): int
     {
-        return $this->fii->llama_sample_top_p_top_k($ctx, $tokens, $nOfTokens, $position, $topP, $topK, $temperature);
+        return $this->fii->llama_sample_top_p_top_k(
+            $ctx,
+            $lastNTokens,
+            $lastNTokensSize,
+            $topP,
+            $topK,
+            $temperature,
+            $repeatPenalty
+        );
     }
 
     public function llama_token_to_str(CData $ctx, int $id): string
@@ -123,5 +152,10 @@ class LLamaCPPFFI
     public function llama_free(CData $ctx): void
     {
         $this->fii->llama_free($ctx);
+    }
+
+    public function llama_token_eos()
+    {
+        return $this->fii->llama_token_eos();
     }
 }
