@@ -56,9 +56,9 @@ class LLamaCPPFFI
      */
     public static function createWithLibraryInPath(string $path): self
     {
-        $duckDBFFI = FFI::cdef(file_get_contents(__DIR__ . '/llama-ffi.h'), $path);
+        $FFI = FFI::cdef(file_get_contents(__DIR__ . '/llama-ffi.h'), $path);
 
-        return new self($duckDBFFI);
+        return new self($FFI);
     }
 
     /**

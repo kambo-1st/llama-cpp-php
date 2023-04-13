@@ -12,6 +12,8 @@ The package enables the use of the LLama C++ library in PHP, thereby allowing th
 
 **Only Linux is supported!**
 
+![asciicast](llama-php.gif)
+
 ## Installation
 
 You can install the package via composer:
