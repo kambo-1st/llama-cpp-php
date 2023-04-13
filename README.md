@@ -1,8 +1,8 @@
 # Experimental bindings for LLama C++ library
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/kambo/llama-cpp.svg?style=flat-square)](https://packagist.org/packages/kambo/llama-cpp)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/kambo/llama-cpp-php.svg?style=flat-square)](https://packagist.org/packages/kambo/llama-cpp-php)
 [![Tests](https://img.shields.io/github/actions/workflow/status/kambo-1st/llama-cpp-php/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/kambo-1st/llama-cpp-php/actions/workflows/run-tests.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/kambo/llama-cpp.svg?style=flat-square)](https://packagist.org/packages/kambo/llama-cpp)
+[![Total Downloads](https://img.shields.io/packagist/dt/kambo/llama-cpp-php.svg?style=flat-square)](https://packagist.org/packages/kambo/llama-cpp-php)
 
 The package enables the use of the LLama C++ library in PHP, thereby allowing the setup and execution of LLM models in PHP on your local machine.
 
@@ -19,8 +19,9 @@ The package enables the use of the LLama C++ library in PHP, thereby allowing th
 You can install the package via composer:
 
 ```bash
-composer require kambo/llama-cpp-php
+composer require kambo/llama-cpp-php kambo/llama-cpp-php-linux-lib
 ```
+Note: the kambo/llama-cpp-php-linux-lib package contains a binary library for Linux.
 
 ## Usage
 
