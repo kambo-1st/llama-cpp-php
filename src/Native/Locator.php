@@ -6,6 +6,8 @@ use Kambo\LLamaCPP\Exception\MissingLibraryException;
 use Kambo\LLamaCPP\Exception\NotImplementedException;
 use Kambo\LLamaCppLinuxLib\Info;
 
+use const PHP_OS_FAMILY;
+
 /**
  * Quick and naive library locator
  */

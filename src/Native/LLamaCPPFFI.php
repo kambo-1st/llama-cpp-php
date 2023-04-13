@@ -6,6 +6,8 @@ use FFI;
 use FFI\CData;
 use FFI\CType;
 
+use function file_get_contents;
+
 /**
  * Wrapper for llama-ffi.h
  *
@@ -80,7 +82,7 @@ class LLamaCPPFFI
      */
     public function newArray(string $type, int $size): ?CData
     {
-        return $this->fii->new($type."[".$size."]");
+        return $this->fii->new($type . '[' . $size . ']');
     }
 
     /**
@@ -131,8 +133,7 @@ class LLamaCPPFFI
         float $topK,
         float $temperature,
         float $repeatPenalty
-    ): int
-    {
+    ): int {
         return $this->fii->llama_sample_top_p_top_k(
             $ctx,
             $lastNTokens,

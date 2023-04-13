@@ -26,7 +26,6 @@ final class ModelParameters
         private bool $useMlock = false,
         private bool $embedding = false,
     ) {
-
     }
 
     /**

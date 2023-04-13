@@ -1,6 +1,6 @@
 {
     "name": "kambo/llama-cpp-php",
-    "description": "This is my package llama-cpp-php",
+    "description": "The package enables the use of the LLama C++ library in PHP, thereby allowing the setup and execution of LLM models in PHP on your local machine.",
     "keywords": [
         "Kambo",
         "llama-cpp-php"

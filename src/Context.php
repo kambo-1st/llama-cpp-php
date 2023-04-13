@@ -4,16 +4,16 @@ namespace Kambo\LLamaCPP;
 
 use Kambo\LLamaCPP\Parameters\ModelParameters;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
+use FFI\CData;
 
 final class Context
 {
-    private \FFI\CData $ctx;
+    private CData $ctx;
 
     public function __construct(
         private LLamaCPPFFI $ffi,
         private readonly ModelParameters $modelParameters,
-    )
-    {
+    ) {
         $lparams = $ffi->llama_context_default_params();
 
         $lparams->n_ctx = $modelParameters->getNCtx();
@@ -42,9 +42,9 @@ final class Context
     }
 
     /**
-     * @return \FFI\CData
+     * @return CData
      */
-    public function getCtx(): \FFI\CData
+    public function getCtx(): CData
     {
         return $this->ctx;
     }

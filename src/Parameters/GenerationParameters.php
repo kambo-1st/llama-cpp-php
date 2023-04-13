@@ -9,7 +9,7 @@ final class GenerationParameters
         private float $topP = 0.9,
         private float $topK = 40,
         private float $temperature = 0.2,
-        private float $repeatPenalty = 1/0.85,
+        private float $repeatPenalty = 1 / 0.85,
     ) {
     }
 
