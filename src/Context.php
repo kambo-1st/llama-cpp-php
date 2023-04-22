@@ -6,7 +6,7 @@ use Kambo\LLamaCPP\Parameters\ModelParameters;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
 use FFI\CData;
 
-final class Context
+class Context
 {
     private CData $ctx;
 
@@ -30,8 +30,9 @@ final class Context
 
     public static function createWithParameter(
         ModelParameters $modelParameters,
+        LLamaCPPFFI $ffi = null,
     ): self {
-        $ffi = LLamaCPPFFI::getInstance();
+        $ffi = $ffi ?? LLamaCPPFFI::getInstance();
 
         return new self($ffi, $modelParameters);
     }

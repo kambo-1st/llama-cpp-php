@@ -101,30 +101,70 @@ class LLamaCPPFFI
         return FFI::addr($ptr);
     }
 
-    // generate wrapper method for llama_context_default_params
     public function llama_context_default_params(): CData
     {
         return $this->fii->llama_context_default_params();
     }
 
-    // generate wrapper method for llama_init_from_file
+    /**
+     * Allocate (almost) all memory needed for the model.
+     *
+     * @param string $path
+     * @param CData  $params
+     *
+     * @return CData Return NULL on failure
+     */
     public function llama_init_from_file(string $path, CData $params): CData
     {
         return $this->fii->llama_init_from_file($path, $params);
     }
 
-    // generate wrapper method for llama_tokenize
+    /**
+     * Convert the provided text into tokens.
+     * The tokens pointer must be large enough to hold the resulting tokens.
+     *
+     * @param CData  $ctx
+     * @param string $text
+     * @param CData  $tokens
+     * @param int    $maxTokens
+     * @param bool   $addEOS
+     *
+     * @return int the number of tokens on success, no more than n_max_tokens, or -1 on error
+     */
     public function llama_tokenize(CData $ctx, string $text, CData $tokens, int $maxTokens, bool $addEOS): int
     {
         return $this->fii->llama_tokenize($ctx, $text, $tokens, $maxTokens, $addEOS);
     }
 
-    // generate wrapper method for llama_eval
-    public function llama_eval(CData $ctx, CData $tokens, int $nOfTokens, int $position, int $nOfSamples): void
+    /**
+     * Run the llama inference to obtain the logits and probabilities for the next token.
+     *
+     * @param CData $ctx
+     * @param CData $tokens the provided batch of new tokens to process
+     * @param int   $nOfTokens the provided batch of new tokens to process
+     * @param int   $nOfPastTokens the number of tokens to use from previous eval calls
+     * @param int   $nOfThreads The number of threads to use for the inference
+     *
+     * @return int
+     */
+    public function llama_eval(CData $ctx, CData $tokens, int $nOfTokens, int $nOfPastTokens, int $nOfThreads): int
     {
-        $this->fii->llama_eval($ctx, $tokens, $nOfTokens, $position, $nOfSamples);
+        return $this->fii->llama_eval($ctx, $tokens, $nOfTokens, $nOfPastTokens, $nOfThreads);
     }
 
+    /**
+     * Sample top-k and top-p from the logits.
+     *
+     * @param CData      $ctx
+     * @param CData|null $lastNTokens
+     * @param int        $lastNTokensSize
+     * @param float      $topP
+     * @param float      $topK
+     * @param float      $temperature
+     * @param float      $repeatPenalty
+     *
+     * @return int
+     */
     public function llama_sample_top_p_top_k(
         CData $ctx,
         ?CData $lastNTokens,
@@ -145,11 +185,26 @@ class LLamaCPPFFI
         );
     }
 
+    /**
+     * Token Id -> String. Uses the vocabulary in the provided context
+     *
+     * @param CData $ctx
+     * @param int   $id
+     *
+     * @return string
+     */
     public function llama_token_to_str(CData $ctx, int $id): string
     {
         return $this->fii->llama_token_to_str($ctx, $id);
     }
 
+    /**
+     * Frees all allocated memory
+     *
+     * @param CData $ctx
+     *
+     * @return void
+     */
     public function llama_free(CData $ctx): void
     {
         $this->fii->llama_free($ctx);

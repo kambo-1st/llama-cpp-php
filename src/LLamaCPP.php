@@ -5,7 +5,7 @@ namespace Kambo\LLamaCPP;
 use Kambo\LLamaCPP\Parameters\GenerationParameters;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
-use Kambo\LLamaCpp\Events\TokenGeneratedEvent;
+use Kambo\LLamaCPP\Events\TokenGeneratedEvent;
 use Generator;
 
 use function strlen;
@@ -35,7 +35,13 @@ final class LLamaCPP
         $nOfTok = $this->ffi->llama_tokenize($this->context->getCtx(), $prompt, $input, strlen($prompt), true);
 
         for ($i = 0; $i < $nOfTok; $i++) {
-            $this->ffi->llama_eval($this->context->getCtx(), $input + $i, 1, $i, 10);
+            $this->ffi->llama_eval(
+                $this->context->getCtx(),
+                $input + $i,
+                1,
+                $i,
+                $generation->getNoOfThreads()
+            );
         }
 
         $eosToken = $this->ffi->llama_token_eos();
@@ -68,7 +74,13 @@ final class LLamaCPP
             );
 
             yield $prediction;
-            $this->ffi->llama_eval($this->context->getCtx(), $this->ffi->addr($token), 1, $nOfTok, 10);
+            $this->ffi->llama_eval(
+                $this->context->getCtx(),
+                $this->ffi->addr($token),
+                1,
+                $nOfTok,
+                $generation->getNoOfThreads()
+            );
         }
     }
 

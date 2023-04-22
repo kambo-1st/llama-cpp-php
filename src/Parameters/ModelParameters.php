@@ -2,7 +2,7 @@
 
 namespace Kambo\LLamaCpp\Parameters;
 
-final class ModelParameters
+class ModelParameters
 {
     /**
      * @param string $modelPath path to used model

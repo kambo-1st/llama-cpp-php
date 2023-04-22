@@ -1,6 +1,6 @@
 <?php
 
-namespace Kambo\LLamaCpp\Events;
+namespace Kambo\LLamaCPP\Events;
 
 use Symfony\Contracts\EventDispatcher\Event;
 

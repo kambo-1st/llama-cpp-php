@@ -2,7 +2,7 @@
 
 namespace Kambo\LLamaCpp\Parameters;
 
-final class GenerationParameters
+class GenerationParameters
 {
     public function __construct(
         private int $predictLength = 128,
@@ -10,6 +10,7 @@ final class GenerationParameters
         private float $topK = 40,
         private float $temperature = 0.2,
         private float $repeatPenalty = 1 / 0.85,
+        private int $noOfThreads = 10,
     ) {
     }
 
@@ -36,5 +37,10 @@ final class GenerationParameters
     public function getRepeatPenalty(): float
     {
         return $this->repeatPenalty;
+    }
+
+    public function getNoOfThreads(): int
+    {
+        return $this->noOfThreads;
     }
 }
