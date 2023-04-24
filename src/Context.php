@@ -49,4 +49,12 @@ class Context
     {
         return $this->ctx;
     }
+
+    /**
+     * @return ModelParameters
+     */
+    public function getModelParameters(): ModelParameters
+    {
+        return $this->modelParameters;
+    }
 }

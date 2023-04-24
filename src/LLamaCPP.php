@@ -6,6 +6,7 @@ use Kambo\LLamaCPP\Parameters\GenerationParameters;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
 use Kambo\LLamaCPP\Events\TokenGeneratedEvent;
+use Kambo\LLamaCPP\Exception\InvalidArgumentException;
 use Generator;
 
 use function strlen;
@@ -95,6 +96,10 @@ final class LLamaCPP
 
     public function createEmbedding(string $text, int $noOfThreads = 10): array
     {
+        if (!$this->context->getModelParameters()->isEmbedding()) {
+            throw new InvalidArgumentException('Generation must of embedding must be turned on.');
+        }
+
         $input  = $this->ffi->newArray('llama_token', strlen($text));
         $nOfTok = $this->ffi->llama_tokenize($this->context->getCtx(), $text, $input, strlen($text), true);
 

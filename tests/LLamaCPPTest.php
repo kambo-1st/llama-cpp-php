@@ -7,6 +7,8 @@ use Kambo\LLamaCPP\Parameters\GenerationParameters;
 use Kambo\LLamaCPP\Context;
 use Kambo\LLamaCPP\LLamaCPP;
 use Kambo\LLamaCPP\Native\LLamaCPPFFI;
+use Kambo\LLamaCPP\Parameters\ModelParameters;
+use Kambo\LLamaCPP\Exception\InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Generator;
 use FFI;
@@ -106,6 +108,13 @@ class LLamaCPPTest extends TestCase
 
     public function testCreateEmbedding()
     {
+        $modelParameters = new ModelParameters(
+            modelPath: 'test',
+            embedding: true,
+        );
+        $this->contextMock->method('getModelParameters')
+            ->willReturn($modelParameters);
+
         $this->contextMock->method('getCtx')
             ->willReturn(FFI::new('int'));
 
@@ -138,5 +147,20 @@ class LLamaCPPTest extends TestCase
             [5,2,3,4,1],
             $result
         );
+    }
+
+    public function testCreateEmbeddingFail()
+    {
+        $modelParameters = new ModelParameters(
+            modelPath: 'test',
+            embedding: false,
+        );
+        $this->contextMock->method('getModelParameters')
+            ->willReturn($modelParameters);
+
+        $llamaCPP = new LLamaCPP($this->contextMock, $this->eventDispatcherMock, $this->ffiMock);
+
+        $this->expectException(InvalidArgumentException::class);
+        $llamaCPP->createEmbedding('test');
     }
 }
