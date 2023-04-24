@@ -92,4 +92,24 @@ final class LLamaCPP
 
         return implode('', $tokens);
     }
+
+    public function createEmbedding(string $text, int $noOfThreads = 10): array
+    {
+        $input  = $this->ffi->newArray('llama_token', strlen($text));
+        $nOfTok = $this->ffi->llama_tokenize($this->context->getCtx(), $text, $input, strlen($text), true);
+
+        for ($i = 0; $i < $nOfTok; $i++) {
+            $this->ffi->llama_eval($this->context->getCtx(), $input + $i, 1, $i, $noOfThreads);
+        }
+
+        $nCount    = $this->ffi->llama_n_embd($this->context->getCtx());
+        $embedding = $this->ffi->llama_get_embeddings($this->context->getCtx());
+
+        $embeddings = [];
+        for ($i = 0; $i < $nCount; $i++) {
+            $embeddings[] = $embedding[$i];
+        }
+
+        return $embeddings;
+    }
 }

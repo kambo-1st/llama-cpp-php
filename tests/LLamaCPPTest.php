@@ -103,4 +103,40 @@ class LLamaCPPTest extends TestCase
 
         $this->assertEquals('test', $result);
     }
+
+    public function testCreateEmbedding()
+    {
+        $this->contextMock->method('getCtx')
+            ->willReturn(FFI::new('int'));
+
+        $this->ffiMock->method('newArray')
+            ->willReturn(FFI::new('int[100]'));
+
+        $this->ffiMock->method('llama_tokenize')
+            ->willReturn(1);
+
+        $this->ffiMock->method('llama_eval');
+
+        $this->ffiMock->method('llama_token_eos')
+            ->willReturn(0);
+
+        $this->ffiMock->method('llama_n_embd')
+            ->willReturn(5);
+
+        $testArray = FFI::new('int[5]');
+        foreach ([5,2,3,4,1] as $key => $value) {
+            $testArray[$key] = $value;
+        }
+        $this->ffiMock->method('llama_get_embeddings')
+            ->willReturn($testArray);
+
+        $llamaCPP = new LLamaCPP($this->contextMock, $this->eventDispatcherMock, $this->ffiMock);
+
+        $result = $llamaCPP->createEmbedding('test');
+
+        $this->assertEquals(
+            [5,2,3,4,1],
+            $result
+        );
+    }
 }

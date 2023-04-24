@@ -214,4 +214,21 @@ class LLamaCPPFFI
     {
         return $this->fii->llama_token_eos();
     }
+
+    public function llama_n_embd(CData $ctx): int
+    {
+        return $this->fii->llama_n_embd($ctx);
+    }
+
+    /**
+     * Get the embeddings for the input
+     *
+     * @param CData $ctx
+     *
+     * @return ?CData
+     */
+    public function llama_get_embeddings(CData $ctx): ?CData
+    {
+        return $this->fii->llama_get_embeddings($ctx);
+    }
 }
